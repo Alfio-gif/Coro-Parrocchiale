@@ -1,6 +1,6 @@
 // Coro San Michele - script di sincronizzazione con Google Drive
 const FILE_NAME = 'coro-data.json';
-const PASSWORD_INIZIALE = 'cambiami'; // cambiala subito dall'app (Admin > Cambia password)
+const PASSWORD_INIZIALE = 'coro123'; // cambiala subito dall'app (Admin > Cambia password)
 
 function sha(s){return Utilities.base64Encode(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,s));}
 function file(){
