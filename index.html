@@ -49,7 +49,7 @@ const API="https://script.google.com/macros/s/AKfycbydx_FcwjO1EGGVVwqmiHM45lsjbx
 // ====================================================================================
 const TEMPI={"Avvento":"#6d3fa8","Natale":"#d4a72c","Quaresima":"#4a1d5c","Pasqua":"#c9b36a","Tempo Ordinario":"#2e8b57","Generico":"#7b8794","Mariano":"#3b82f6"};
 const MOM=["Ingresso","Kyrie","Gloria","Salmo","Alleluia","Lavanda dei piedi","Offertorio","Santo","Agnello di Dio","Comunione","Adorazione","Finale"];
-const VOCI=["Soprani","Contralti","Tenori","Bassi"],TIPI=["Messa domenicale","Messa festiva","Matrimonio","Solennità","Funerale","Adorazione","Altro"],TK=Object.keys(TEMPI);
+const VOCI=["Soprani","Contralti","Tenori","Bassi"],TIPI=["Messa domenicale","Messa festiva","Matrimonio","Solennità", "Settimana Santa","Funerale","Adorazione","Altro"],TK=Object.keys(TEMPI);
 const TT={canti:"Canto",scalette:"Scaletta",coristi:"Corista",prove:"Prova"};
 const FD={prove:[["t","Titolo / note della prova"],["data","Data","date"],["ora","Ora","time"]],canti:[["t","Titolo"],["tempo","Tempo liturgico","s",TK],["mom","Momento","s",MOM],["audio","Link audio (Drive)"],["spartito","Link spartito (Drive)"],["testo","Link testo (Drive)"]],
 scalette:[["t","Titolo"],["data","Data","date"],["tempo","Tempo","s",TK],["tipo","Tipo","s",TIPI],["spartito","Link spartito (Drive)"],["testo","Link testo (Drive)"],["canti","Canti (selezione multipla)","m"]],
