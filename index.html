@@ -125,7 +125,7 @@ function tabAd(){
 <div class="c"><h3>🖼️ Logo del coro</h3><input id="lu" placeholder="Link del logo su Google Drive" value="${esc(D.logo)}"><div class="rw"><button class="b" data-a="savel">Salva link</button></div></div>
 ${prv()}${gl("canti")}${gl("scalette")}${gl("coristi")}${gl("prove")}${sync()}`}
 function render(){const L=logo(D.logo);$("lg").src=L||"icon-192.png";$("vb").textContent=adm?"🛠️ Admin":"👤 Vista Corista";
- $("app").innerHTML=comm()+(tab=="rep"||tab=="sc"?nextBox():"")+({rep:tabRep,sc:tabSc,cor:tabCor,ad:tabAd}[tab])();
+ $("app").innerHTML=comm()+(tab=="rep"?nextBox():"")+({rep:tabRep,sc:tabSc,cor:tabCor,ad:tabAd}[tab])();
  $("nv").innerHTML=[["rep","🎵 Repertorio"],["sc","📋 Scalette"],["cor","👥 Coristi"],["ad",adm?"🛠️ Admin":"🔒 Admin"]].map(([k,l])=>`<button data-a="tab" data-t="${k}" class="${tab==k?"on":""}">${l}</button>`).join("")}
 function openForm(k,id){const it=id?D[k].find(x=>x.id==id):{};ed={k,id};
  $("dgt").textContent=(id?"Modifica ":k=="scalette"?"Crea ":"Aggiungi ")+TT[k];
