@@ -4,6 +4,8 @@
 <meta name="theme-color" content="#0ea5e9">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Coro San Michele">
+<meta name="description" content="App del Coro Parrocchiale: repertorio, scalette e comunicazioni">
+<meta property="og:type" content="website"><meta property="og:title" content="Coro San Michele - Parrocchia San Michele Arcangelo"><meta property="og:description" content="Repertorio, scalette e comunicazioni del Coro Parrocchiale"><meta property="og:url" content="https://alfio-gif.github.io/Coro-Parrocchiale/"><meta property="og:image" content="https://alfio-gif.github.io/Coro-Parrocchiale/icon-512.png">
 <link rel="icon" href="favicon.ico"><link rel="apple-touch-icon" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -47,6 +49,7 @@ label{display:block;font-size:12px;color:var(--mu);margin-bottom:6px}
 // ====== CONFIGURAZIONE: incolla qui il link dell'app web di Google Apps Script ======
 const API="https://script.google.com/macros/s/AKfycbydx_FcwjO1EGGVVwqmiHM45lsjbx59wS0lgVHKUiDEGBor8ukQYJFici63n7VTol5j/exec";
 // ====================================================================================
+const APP="https://alfio-gif.github.io/Coro-Parrocchiale/";
 const TEMPI={"Avvento":"#6d3fa8","Natale":"#d4a72c","Quaresima":"#4a1d5c","Settimana Santa":"#dc143c","Pasqua":"#c9b36a","Tempo Ordinario":"#2e8b57","Generico":"#7b8794","Mariano":"#3b82f6"};
 const MOM=["Ingresso","Kyrie","Gloria","Salmo","Alleluia","Lavanda dei piedi","Offertorio","Santo","Agnello di Dio","Comunione","Adorazione","Finale"];
 const VOCI=["Soprani","Contralti","Tenori","Bassi"],TIPI=["Messa domenicale","Messa festiva","Solennità","Matrimonio","Funerale","Adorazione","Altro"],TK=Object.keys(TEMPI);
@@ -123,7 +126,7 @@ function tabAd(){
  return `<div class="c" style="background:var(--pd);color:#fff"><h2 class="cz" style="margin:0;font-size:15px">PANNELLO DI CONTROLLO DIREZIONE</h2><div class="rw"><button class="b s" data-a="chp">🔑 Cambia password</button><button class="b s" data-a="out">Esci</button></div></div>
 <div class="c"><div class="rw" style="margin:0"><button class="b" data-a="new" data-k="canti">➕ Aggiungi Canto al Repertorio</button><button class="b" data-a="new" data-k="scalette">➕ Crea Nuova Scaletta</button><button class="b" data-a="new" data-k="coristi">➕ Aggiungi/Modifica Corista</button></div></div>
 <div class="c"><div class="rw" style="margin:0"><button class="b" data-a="push">☁️ Salva su Google Drive</button><button class="b s" data-a="exp">⬇️ Esporta Backup JSON</button><label class="b s">⬆️ Importa Backup<input type="file" id="imp" accept=".json" class="hid"></label></div><div class="mt stt" style="margin-top:6px">${esc(stat)}</div></div>
-<div class="c"><h3>GESTIONE COMUNICAZIONI IMPORTANTI</h3><textarea id="cm" rows="4" placeholder="Scrivi la comunicazione…">${esc(D.comm.text)}</textarea><label style="margin:6px 0"><input type="checkbox" id="cw" style="width:auto"> Invia notifica via WhatsApp ai coristi</label><button class="b" data-a="savec">💾 Salva e invia · Aggiornamento/Comunicazioni</button></div>
+<div class="c"><h3>GESTIONE COMUNICAZIONI IMPORTANTI</h3><textarea id="cm" rows="4" placeholder="Scrivi la comunicazione…">${esc(D.comm.text)}</textarea><label style="margin:6px 0"><input type="checkbox" id="cw" style="width:auto"> Apri WhatsApp per inviare ai gruppi (Soprani, Contralti, Tenori, Bassi)</label><button class="b" data-a="savec">💾 Salva e invia · Aggiornamento/Comunicazioni</button></div>
 <div class="c"><h3>🖼️ Logo del coro</h3><input id="lu" placeholder="Link del logo su Google Drive" value="${esc(D.logo)}"><div class="rw"><button class="b" data-a="savel">Salva link</button></div></div>
 ${prv()}${gl("canti")}${gl("scalette")}${gl("coristi")}${gl("prove")}${sync()}`}
 function render(){const L=logo(D.logo);$("lg").src=L||"icon-192.png";$("vb").textContent=adm?"🛠️ Admin":"👤 Vista Corista";
@@ -141,9 +144,6 @@ function okForm(){const o={},el=$("dgf").elements;
  FD[ed.k].forEach(([n,,t])=>{o[n]=t=="m"?[...el[n].selectedOptions].map(x=>x.value):el[n].value.trim()});
  if(!(o.t||o.n)){alert("Inserisci titolo o nome");return}
  mutate(()=>{if(ed.id)Object.assign(D[ed.k].find(x=>x.id==ed.id),o);else D[ed.k].push({id:Date.now().toString(36),...o})});$("dg").close()}
-function waList(){const t="📢 Coro San Michele: "+D.comm.text,L=D.coristi.filter(c=>c.tel);
- $("dgt").textContent="Invia su WhatsApp";ed={};
- $("dgf").innerHTML=(L.length?'<p class="mt">Tocca il nome per aprire WhatsApp con il messaggio già pronto.</p>':'<p class="mt">Nessun corista con numero di telefono.</p>')+L.map(c=>`<div class="er"><span>${esc(c.n)}</span><a class="bt wa" target="_blank" rel="noopener" href="https://wa.me/${wa(c.tel)}?text=${encodeURIComponent(t)}">${WAI} Invia</a></div>`).join("");$("dg").showModal()}
 async function act(a,d){
  if(a=="tab"){tab=d.t;render()}
  else if(a=="sync")load();
@@ -157,13 +157,13 @@ async function act(a,d){
  else if(a=="cx")$("dg").close();
  else if(a=="push")push();
  else if(a=="exp"){const l=document.createElement("a");l.href=URL.createObjectURL(new Blob([JSON.stringify(D,null,1)],{type:"application/json"}));l.download="coro-backup-"+new Date().toISOString().slice(0,10)+".json";l.click()}
- else if(a=="savec"){const send=$("cw").checked;mutate(()=>D.comm={text:$("cm").value.trim(),date:new Date().toLocaleString("it-IT",{dateStyle:"medium",timeStyle:"short"})});if(send&&D.comm.text)waList()}
+ else if(a=="savec"){const send=$("cw").checked;mutate(()=>D.comm={text:$("cm").value.trim(),date:new Date().toLocaleString("it-IT",{dateStyle:"medium",timeStyle:"short"})});if(send&&D.comm.text)window.open("https://wa.me/?text="+encodeURIComponent("*Coro San Michele*\n"+D.comm.text+"\n\n"+APP),"_blank")}
  else if(a=="savel")mutate(()=>D.logo=$("lu").value.trim());
  else if(a=="chp"){const n=prompt("Nuova password (almeno 6 caratteri):");if(n&&n.length>=6){try{const r=await post({a:"chpwd",pwd,np:n});if(r.ok){pwd=n;sessionStorage.setItem("p",n);alert("Password cambiata")}else alert("Operazione rifiutata")}catch(e){alert("Errore di rete")}}else if(n)alert("Password troppo corta")}
  else if(a=="sec")$("s"+d.id).classList.toggle("hid")
  else if(a=="fav"){fav=fav.includes(d.id)?fav.filter(x=>x!=d.id):[...fav,d.id];ls.set("coro.fav",JSON.stringify(fav));$("lst").innerHTML=listRep()}
  else if(a=="pres")presForm(d.id)
- else if(a=="shs"){const x=D.scalette.find(y=>y.id==d.id);if(x)window.open("https://wa.me/?text="+encodeURIComponent("🎶 *"+x.t+"*\n📅 "+dd(x.data)+" · "+x.tipo+" · "+x.tempo+"\n\n"+(x.canti||[]).map(i=>D.canti.find(y=>y.id==i)).filter(Boolean).sort((p,q)=>MOM.indexOf(p.mom)-MOM.indexOf(q.mom)).map(c=>"• "+c.mom+": "+c.t).join("\n")+(x.spartito?"\n\n🎼 "+x.spartito:"")),"_blank")}
+ else if(a=="shs"){const x=D.scalette.find(y=>y.id==d.id);if(x)window.open("https://wa.me/?text="+encodeURIComponent("*"+x.t+"*\nData: "+dd(x.data)+" · "+x.tipo+" · "+x.tempo+"\n\n"+(x.canti||[]).map(i=>D.canti.find(y=>y.id==i)).filter(Boolean).sort((p,q)=>MOM.indexOf(p.mom)-MOM.indexOf(q.mom)).map(c=>"- "+c.mom+": "+c.t).join("\n")+(x.spartito?"\n\nSpartito: "+x.spartito:"")),"_blank")}
  else if(a=="unl"){const m=$("pm"+d.id);m.textContent="Verifica…";try{const r=await post({a:"sec",id:d.id,pin:$("pn"+d.id).value});if(r.ok){unl[d.id]=r.s;$("s"+d.id).innerHTML=secHtml(D.coristi.find(x=>x.id==d.id))}else m.textContent="❌ PIN errato"}catch(e){m.textContent="❌ Errore di rete"}}}
 document.addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(b)act(b.dataset.a,b.dataset)});
 document.addEventListener("input",e=>{const i=e.target.id,m={q:"q",ft:"t",fm:"m",fo:"o",sq:"sq",fs:"st"};if(i=="ff"){F.f=e.target.checked;$("lst").innerHTML=listRep()}else if(m[i]){F[m[i]]=e.target.value;$("lst").innerHTML=tab=="rep"?listRep():listSc()}});
