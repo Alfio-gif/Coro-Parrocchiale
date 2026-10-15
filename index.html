@@ -49,7 +49,6 @@ label{display:block;font-size:12px;color:var(--mu);margin-bottom:6px}
 // ====== CONFIGURAZIONE: incolla qui il link dell'app web di Google Apps Script ======
 const API="https://script.google.com/macros/s/AKfycbydx_FcwjO1EGGVVwqmiHM45lsjbx59wS0lgVHKUiDEGBor8ukQYJFici63n7VTol5j/exec";
 // ====================================================================================
-const APP="https://alfio-gif.github.io/Coro-Parrocchiale/";
 const TEMPI={"Avvento":"#6d3fa8","Natale":"#d4a72c","Quaresima":"#4a1d5c","Settimana Santa":"#dc143c","Pasqua":"#c9b36a","Tempo Ordinario":"#2e8b57","Generico":"#7b8794","Mariano":"#3b82f6"};
 const MOM=["Ingresso","Kyrie","Gloria","Salmo","Alleluia","Lavanda dei piedi","Offertorio","Santo","Agnello di Dio","Comunione","Adorazione","Finale"];
 const VOCI=["Soprani","Contralti","Tenori","Bassi"],TIPI=["Messa domenicale","Messa festiva","Solennità","Matrimonio","Funerale","Adorazione","Altro"],TK=Object.keys(TEMPI);
@@ -157,7 +156,7 @@ async function act(a,d){
  else if(a=="cx")$("dg").close();
  else if(a=="push")push();
  else if(a=="exp"){const l=document.createElement("a");l.href=URL.createObjectURL(new Blob([JSON.stringify(D,null,1)],{type:"application/json"}));l.download="coro-backup-"+new Date().toISOString().slice(0,10)+".json";l.click()}
- else if(a=="savec"){const send=$("cw").checked;mutate(()=>D.comm={text:$("cm").value.trim(),date:new Date().toLocaleString("it-IT",{dateStyle:"medium",timeStyle:"short"})});if(send&&D.comm.text)window.open("https://wa.me/?text="+encodeURIComponent("*Coro San Michele*\n"+D.comm.text+"\n\n"+APP),"_blank")}
+ else if(a=="savec"){const send=$("cw").checked;mutate(()=>D.comm={text:$("cm").value.trim(),date:new Date().toLocaleString("it-IT",{dateStyle:"medium",timeStyle:"short"})});if(send&&D.comm.text)window.open("https://wa.me/?text="+encodeURIComponent("*Coro San Michele*\n"+D.comm.text),"_blank")}
  else if(a=="savel")mutate(()=>D.logo=$("lu").value.trim());
  else if(a=="chp"){const n=prompt("Nuova password (almeno 6 caratteri):");if(n&&n.length>=6){try{const r=await post({a:"chpwd",pwd,np:n});if(r.ok){pwd=n;sessionStorage.setItem("p",n);alert("Password cambiata")}else alert("Operazione rifiutata")}catch(e){alert("Errore di rete")}}else if(n)alert("Password troppo corta")}
  else if(a=="sec")$("s"+d.id).classList.toggle("hid")
