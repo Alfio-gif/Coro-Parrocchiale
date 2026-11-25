@@ -16,7 +16,7 @@
 body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.45 Inter,system-ui,sans-serif;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))}
 h1,h2,h3,.cz{font-family:Cinzel,Georgia,serif}
 .w{max-width:760px;margin:0 auto;padding:10px;padding-top:calc(10px + env(safe-area-inset-top,0px))}
-.br{background:linear-gradient(135deg,#0ea5e9,#0369a1);color:#fff;border-radius:16px;padding:12px;margin-bottom:10px}
+.br{background:linear-gradient(135deg,#0ea5e9,#0369a1);color:#fff;border-radius:16px;padding:12px;margin-bottom:10px;border-bottom:4px solid var(--pr)}
 #lg{display:block;width:56px;height:56px;border-radius:50%;object-fit:cover;background:#fff;border:2px solid #fff8}#top .br{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:8px;margin-bottom:6px;padding:8px 10px}
 .tt{text-align:left;overflow-wrap:anywhere}.tt h1{margin:0;font-size:15px;line-height:1.2}.tt div{font-size:11px;line-height:1.25;opacity:.95}.rt{display:flex;flex-direction:column;align-items:flex-end;gap:4px}#vb{font-size:10.5px;font-weight:600;background:#fff3;border-radius:99px;padding:2px 8px;white-space:nowrap}#th,#bn{border:0;background:#fff3;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:15px}
 .comm{background:var(--cb);border:1px solid var(--cbd);border-radius:12px;padding:9px 11px;margin-bottom:10px}
@@ -49,6 +49,16 @@ nav{gap:2px}nav button{position:relative}nav .dot{position:absolute;top:4px;righ
 .tm{font:700 36px Cinzel,serif;text-align:center;color:var(--pd);margin:2px 0}.pg{height:6px;background:var(--lt);border-radius:99px;overflow:hidden}.pg i{display:block;height:100%;background:var(--pr);transition:width .3s}
 .sr{display:flex;gap:6px;align-items:center;padding:7px 9px;border:1px solid var(--bd);border-radius:10px;margin-bottom:5px}.sr.cur{background:var(--pr);border-color:var(--pr);color:#fff}.sr.cur .mt,.sr.cur .cz{color:#fff}.sr.dn{opacity:.45}
 .k-rosso{color:#dc2626}.k-blu{color:#2563eb}.k-ocra{color:#c8860a}.k-verde{color: #15803d}[data-theme="dark"] .k-rosso{color:#f87171}[data-theme="dark"] .k-blu{color:#60a5fa}[data-theme="dark"] .k-ocra{color:#e0b84c}[data-theme="dark"] .k-verde{color: #4ade80} .k-corsivo{font-style:italic} 
+/* Tema per tempo liturgico (il celeste del Tempo Ordinario non cambia) */
+[data-lit="verde"]:not([data-theme="dark"]){--bg:#f0f8f1;--bd:#cfe6d2;--pr:#2f855a;--pd:#276749;--lt:#e2f3e6;--in:#f8fdf9}
+[data-theme="dark"][data-lit="verde"]{--bg:#0a1a10;--cd:#10281a;--bd:#25543a;--pr:#4ade80;--pd:#86efac;--lt:#163a25;--in:#0c2015}
+[data-lit="viola"]:not([data-theme="dark"]){--bg:#f5f0fb;--bd:#e0d3f2;--pr:#7c3aed;--pd:#5b21b6;--lt:#ede4fb;--in:#fbf8ff}
+[data-lit="oro"]:not([data-theme="dark"]){--bg:#fcf9f1;--bd:#ebe0c2;--pr:#a8832a;--pd:#7a5e1c;--lt:#f6edd2;--in:#fffdf8}
+/*[data-lit="oro"]:not([data-theme="dark"]){--bg:#fbf6e8;--bd:#efe0b0;--pr:#a16207;--pd:#854d0e;--lt:#fbefc8;--in:#fffdf5} */
+[data-lit="rosso"]:not([data-theme="dark"]){--bg:#fdf0f0;--bd:#f5cccc;--pr:#dc2626;--pd:#991b1b;--lt:#fde2e2;--in:#fff9f9}
+[data-theme="dark"][data-lit="viola"]{--bg:#150c24;--cd:#1f1236;--bd:#4a2d78;--pr:#a78bfa;--pd:#c4b5fd;--lt:#2a1a47;--in:#1c1131}
+[data-theme="dark"][data-lit="oro"]{--bg:#1a1405;--cd:#2a210a;--bd:#5c4a15;--pr:#e0b84c;--pd:#f0d27a;--lt:#3a2e0e;--in:#221a07}
+[data-theme="dark"][data-lit="rosso"]{--bg:#240d0d;--cd:#351515;--bd:#6e2a2a;--pr:#f87171;--pd:#fca5a5;--lt:#4a1c1c;--in:#2c1010}
 </style></head><body>
 <div id="top"><div class="w" style="padding-bottom:0"><div class="br"><div class="tt"><h1>Coro San Michele</h1><div>Parrocchia San Michele Arcangelo</div><div>Villasmundo</div></div><img id="lg" alt="Logo"><div class="rt"><span id="vb"></span><div style="display:flex;gap:4px"><button id="bn" class="hid" title="Notifiche">🔕</button><button id="th" title="Tema chiaro/scuro">🌙</button></div></div></div></div><nav id="nv"></nav></div>
 <div class="w" style="padding-top:4px"><div id="app"></div></div>
@@ -128,7 +138,8 @@ function easter(y){const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=
 function tempoOggi(){const n=new Date(),y=n.getFullYear(),t=new Date(y,n.getMonth(),n.getDate()),ad=(d,k)=>new Date(d.getFullYear(),d.getMonth(),d.getDate()+k),E=easter(y),nat=new Date(y,11,25),av=ad(nat,-(nat.getDay()||7)-21),j6=new Date(y,0,6);
  if(t>=nat)return"Natale";if(t>=av)return"Avvento";if(t<=ad(j6,7-j6.getDay()))return"Natale";
  if(t>=ad(E,-7)&&t<E)return"Settimana Santa";if(t>=ad(E,-46)&&t<ad(E,-7))return"Quaresima";if(t>=E&&t<=ad(E,49))return"Pasqua";return"Tempo Ordinario"}
-function tabOg(){const S=D.scalette.filter(x=>x.data==td()),n=new Date().toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+ document.documentElement.dataset.lit=({"Avvento":"viola","Quaresima":"viola","Natale":"oro","Pasqua":"oro","Settimana Santa":"rosso","Tempo Ordinario":"verde"})[tempoOggi()]||"";
+ function tabOg(){const S=D.scalette.filter(x=>x.data==td()),n=new Date().toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
  return `<div class="c nx"><div class="mt" style="text-transform:capitalize">${esc(n)}</div><h2 class="cz" style="margin:2px 0 6px;font-size:17px;color:var(--pd)">☀️ Servizio di Oggi</h2>${chip(tempoOggi())}<span class="mt">tempo liturgico</span></div>`+(S.length?S.map(s=>`<div class="c"><b class="cz">${esc(s.t)}</b><div style="margin:3px 0">${chip(s.tempo)}<span class="mt">${esc(s.tipo)} · 🎵 ${(s.canti||[]).length} canti${tot(s)}</span></div>${songs(s)}<div class="rw"><button class="b" data-a="svc" data-id="${s.id}">▶️ Avvia servizio</button>${ltbtn(s)}${lk("🎼 Spartito",s.spartito)}${lk("📄 Testo",s.testo)}</div></div>`).join(""):'<div class="c mt" style="text-align:center">Nessuna scaletta in programma per oggi.</div>'+nextBox())+sync()}
 let SV=null,svT=null,wl=null;
 const mmss=ms=>{const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")};
@@ -189,10 +200,10 @@ function okForm(){const o={},el=$("dgf").elements;
 async function act(a,d){
  if(a=="tab"){tab=d.t;render()}
  else if(a=="svc")svOpen(d.id)
- else if(a=="tl"){const c=D.canti.find(x=>x.id==d.id)||D.salmi.find(x=>x.id==d.id);if(c){$("tx").innerHTML=`<h3 class="cz" style="margin:0 0 8px">${esc(c.t)}</h3><div class="sv" style="max-height:62vh;white-space:pre-wrap;font-size:17px;line-height:1.6;hyphens:auto">${fmt(c.tl)}</div><div class="rw"><button class="b" data-a="txx">Chiudi</button></div>`;$("tx").showModal()}}
+ else if(a=="tl"){const c=D.canti.find(x=>x.id==d.id)||D.salmi.find(x=>x.id==d.id);if(c){$("tx").innerHTML=`<h3 class="cz" style="margin:0 0 8px">${esc(c.t)}</h3><div class="sv" style="max-height:62vh;white-space:pre-wrap;font-size:17px;line-height:1.6">${fmt(c.tl)}</div><div class="rw"><button class="b" data-a="txx">Chiudi</button></div>`;$("tx").showModal()}}
  else if(a=="txx")$("tx").close()
  else if(a=="fmt"){const x=document.querySelector('#dg textarea[name="'+d.f+'"]');if(!x)return;const o=d.t=="b"?["**","**"]:["["+d.t+"]","[/"+d.t+"]"],p=x.selectionStart,q=x.selectionEnd,v=x.value;x.value=v.slice(0,p)+o[0]+v.slice(p,q)+o[1]+v.slice(q);x.focus();x.setSelectionRange(p+o[0].length,q+o[0].length)}
- else if(a=="lt"){const s=D.scalette.find(x=>x.id==d.id);if(s){$("tx").innerHTML=`<h3 class="cz" style="margin:0 0 8px">Letture · ${esc(s.t)}</h3><div class="sv" style="max-height:62vh;white-space:pre-wrap;font-size:17px;line-height:1.6;text-align:justify">${fmt(s.lett)}</div><div class="rw"><button class="b" data-a="txx">Chiudi</button></div>`;$("tx").showModal()}}
+ else if(a=="lt"){const s=D.scalette.find(x=>x.id==d.id);if(s){$("tx").innerHTML=`<h3 class="cz" style="margin:0 0 8px">Letture · ${esc(s.t)}</h3><div class="sv" style="max-height:62vh;white-space:pre-wrap;font-size:17px;line-height:1.6">${fmt(s.lett)}</div><div class="rw"><button class="b" data-a="txx">Chiudi</button></div>`;$("tx").showModal()}}
  else if(a=="bk"){const e=$("bkl");e.textContent="Caricamento…";try{const r=await post({a:"bklist",pwd});e.innerHTML=r.ok?(r.l.map(b=>`<div class="er"><span>${esc(b.d)} · ${b.c} canti · ${b.s} scalette</span><button class="b s" data-a="bkr" data-id="${b.id}">↩️ Ripristina</button></div>`).join("")||"Nessuna copia disponibile"):"Operazione rifiutata: hai aggiornato lo script su Google Apps Script?"}catch(x){e.textContent="Errore di rete"}}
  else if(a=="bkr"){if(!confirm("Ripristinare questa versione? Prima verrà salvata una copia dei dati attuali."))return;try{const r=await post({a:"restore",pwd,id:d.id});if(r.ok){D=norm(r.data);D.v=r.v;cache();stat="✅ Versione ripristinata alle "+tm();render()}else alert("Ripristino non riuscito")}catch(x){alert("Errore di rete")}}
  else if(a=="svn"){if(SV&&SV.i<SV.L.length-1){SV.i++;svR()}}
