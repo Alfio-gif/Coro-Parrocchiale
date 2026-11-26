@@ -58,6 +58,7 @@ nav{gap:2px}nav button{position:relative}nav .dot{position:absolute;top:4px;righ
 [data-theme="dark"][data-lit="viola"]{--bg:#150c24;--cd:#1f1236;--bd:#4a2d78;--pr:#a78bfa;--pd:#c4b5fd;--lt:#2a1a47;--in:#1c1131}
 [data-theme="dark"][data-lit="oro"]{--bg:#1a1405;--cd:#2a210a;--bd:#5c4a15;--pr:#e0b84c;--pd:#f0d27a;--lt:#3a2e0e;--in:#221a07}
 [data-theme="dark"][data-lit="rosso"]{--bg:#240d0d;--cd:#351515;--bd:#6e2a2a;--pr:#f87171;--pd:#fca5a5;--lt:#4a1c1c;--in:#2c1010}
+.bnr{display:block;width:100%;height:96px;object-fit:cover;border-radius:12px;border:1px solid var(--bd);margin-bottom:8px}@media(min-width:600px){.bnr{height:120px}}
 </style></head><body>
 <div id="top"><div class="w" style="padding-bottom:0"><div class="br"><div class="tt"><h1>Coro San Michele</h1><div>Parrocchia San Michele Arcangelo</div><div>Villasmundo</div></div><img id="lg" alt="Logo"><div class="rt"><span id="vb"></span><div style="display:flex;gap:4px"><button id="bn" class="hid" title="Notifiche">🔕</button><button id="th" title="Tema chiaro/scuro">🌙</button></div></div></div></div><nav id="nv"></nav></div>
 <div class="w" style="padding-top:4px"><div id="app"></div></div>
@@ -181,8 +182,10 @@ function tabAd(){
 <div class="c"><h3>GESTIONE COMUNICAZIONI IMPORTANTI</h3><textarea id="cm" rows="4" placeholder="Scrivi la comunicazione…">${esc(D.comm.text)}</textarea><label style="margin:6px 0"><input type="checkbox" id="cw" style="width:auto"> Apri WhatsApp per inviare ai gruppi (Soprani, Contralti, Tenori, Bassi)</label><button class="b" data-a="savec">💾 Salva e invia · Aggiornamento/Comunicazioni</button></div>${FB.apiKey?`<div class="c"><h3>🔔 NOTIFICA PUSH</h3><p class="mt" style="margin:0 0 6px">Testo indipendente dalle Comunicazioni Importanti: viene inviato solo come notifica sui telefoni.</p><textarea id="pt" rows="3" maxlength="300" placeholder="Es. Domani sera servizio alle 19:30"></textarea><div class="rw"><button class="b" data-a="snot">🔔 Invia notifica</button><button class="b s" data-a="ptest">Notifica di prova</button></div></div>`:""}
 <div class="c"><h3>🖼️ Logo del coro</h3><input id="lu" placeholder="Link del logo su Google Drive" value="${esc(D.logo)}"><div class="rw"><button class="b" data-a="savel">Salva link</button></div></div>
 <div class="c"><h3>🕘 Versioni precedenti</h3><p class="mt" style="margin:0 0 6px">Copie di sicurezza automatiche su Drive. Se carichi per errore dati sbagliati, ripristina una versione precedente.</p><button class="b s" data-a="bk">Mostra copie</button><div id="bkl" class="mt" style="margin-top:6px"></div></div>${prv()}${gl("canti")}${gl("salmi")}${gl("scalette")}${gl("coristi")}${gl("prove")}${sync()}`}
+const BNR={"Avvento":"avvento","Natale":"natale","Quaresima":"quaresima","Settimana Santa":"settimana-santa","Pasqua":"pasqua","Tempo Ordinario":"tempo-ordinario"};
+function bnr(){const t=tempoOggi(),f=BNR[t];return f?`<img class="bnr" src="banner-${f}.jpg" alt="${esc(t)}" onerror="this.remove()">`:""}
 function render(){const L=logo(D.logo);$("lg").src=L||"icon-192.png";$("vb").textContent=adm?"🛠️ Admin":"👤 Vista Corista";
- $("app").innerHTML=comm()+tip()+(tab=="rep"?nextBox():"")+({og:tabOg,rep:tabRep,sal:tabSal,sc:tabSc,cor:tabCor,ad:tabAd}[tab])();
+ $("app").innerHTML=bnr()+comm()+tip()+(tab=="rep"?nextBox():"")+({og:tabOg,rep:tabRep,sal:tabSal,sc:tabSc,cor:tabCor,ad:tabAd}[tab])();
  $("nv").innerHTML=[["og","☀️ Oggi"],["rep","🎵 Repertorio"],["sal","📖 Salmi"],["sc","📋 Scalette"],["cor","👥 Coristi"],["ad",adm?"🛠️ Admin":"🔒 Admin"]].map(([k,l])=>`<button data-a="tab" data-t="${k}" class="${tab==k?"on":""}">${k=="og"&&unread()?'<i class="dot"></i>':""}<span style="font-size:15px;line-height:1">${l.split(" ")[0]}</span><span>${l.split(" ").slice(1).join(" ")}</span></button>`).join("")}
 function openForm(k,id){const it=id?D[k].find(x=>x.id==id):{};ed={k,id};
  $("dgt").textContent=(id?"Modifica ":k=="scalette"?"Crea ":"Aggiungi ")+TT[k];
