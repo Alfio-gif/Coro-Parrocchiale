@@ -127,9 +127,9 @@ function listRep(){const w=nz(F.q).split(/\s+/).filter(Boolean),L=D.canti.filter
 function listSal(){const w=nz(F.yq).split(/\s+/).filter(Boolean),L=D.salmi.filter(c=>{const h=nz(c.t+" "+c.tempo);return w.every(x=>h.includes(x))&&(!F.yt||c.tempo==F.yt)&&(!F.yf||fav.includes(c.id))}).sort((a,b)=>a.t.localeCompare(b.t));
  const card=c=>`<div class="c"><div class="er" style="border:0;padding:0"><b class="cz" style="flex:1">${esc(c.t)}</b><button class="st" data-a="fav" data-id="${c.id}">${fav.includes(c.id)?"⭐":"☆"}</button>${ab("salmi",c.id)}</div><div style="margin:3px 0">${chip(c.tempo)}</div><div class="rw">${lk("🔊 Audio",c.audio)}${lk("🎼 Spartito",c.spartito)}${lk("📄 Testo",c.testo)}${tbtn(c)}${nbtn(c.id)}</div>${nb(c.id)}</div>`,tp=c=>c.tempo||"Generico",op=w.length||F.yt||F.yf,gr=[...TK,...new Set(L.map(tp).filter(t=>!TK.includes(t)))].filter(t=>L.some(c=>tp(c)==t));
  return L.length?gr.map(t=>{const G=L.filter(c=>tp(c)==t);return `<details class="c" data-sc="y-${esc(t)}" ${openSc.has("y-"+t)||op?"open":""}><summary class="ss"><span class="ar">▾</span><span class="ch" style="background:${TEMPI[t]||"#7b8794"};font-size:13px;padding:2px 12px">${esc(t)}</span> <span class="mt">(${G.length} ${G.length==1?"salmo":"salmi"})</span></summary><div class="sv sg" style="margin-top:8px">${G.map(card).join("")}</div></details>`}).join(""):'<div class="mt" style="text-align:center;padding:12px">Nessun salmo trovato</div>'}
-function listSc(){const w=nz(F.sq).split(/\s+/).filter(Boolean),L=D.scalette.filter(s=>{const h=nz(s.t+" "+s.tempo+" "+s.tipo);return w.every(x=>h.includes(x))&&(!F.st||s.tempo==F.st)&&(!F.sa||annoLit(s)==F.sa)}).sort((a,b)=>(a.data||"9999").localeCompare(b.data||"9999"));
+function listSc(){const w=nz(F.sq).split(/\s+/).filter(Boolean),L=D.scalette.filter(s=>{const h=nz(s.t+" "+s.tempo+" "+s.tipo);return w.every(x=>h.includes(x))&&(!F.st||s.tempo==F.st)&&(!F.sa||!annoLit(s)||annoLit(s)==F.sa)}).sort((a,b)=>(a.data||"9999").localeCompare(b.data||"9999"));
  const card=s=>`<details class="c" data-sc="${s.id}" ${openSc.has(s.id)?"open":""}><summary class="ss"><span class="ar">▾</span>${adm?`<span style="float:right;display:flex;gap:4px;margin-right:8px">${ab("scalette",s.id)}</span>`:""}<b class="cz">${esc(s.t)}</b><div style="margin:3px 0">${chip(s.tempo)}<span class="mt">${dd(s.data)} · ${esc(s.tipo)}${yA(s)} · 🎵 ${(s.canti||[]).length} canti${tot(s)}</span></div></summary>${songs(s)}<div class="rw">${lk("🎼 Spartito",s.spartito)}${lk("📄 Testo",s.testo)}${ltbtn(s)}<button class="bt" data-a="svc" data-id="${s.id}">▶️ Avvia servizio</button><button class="bt wa" data-a="shs" data-id="${s.id}">${WAI} Condividi</button></div></details>`,t=td(),up=L.filter(x=>!x.data||x.data>=t),pa=L.filter(x=>x.data&&x.data<t);
- return L.length?(up.length?up.map(card).join(""):'<div class="mt" style="text-align:center;padding:8px">Nessuna scaletta in programma</div>')+(pa.length?`<details class="c" data-sc="past" ${openSc.has("past")||w.length||F.st||F.sa?"open":""}><summary class="ss"><span class="ar">▾</span><b class="cz">🗂️ Scalette passate</b> <span class="mt">(${pa.length})</span></summary><div class="sv mh" style="margin-top:8px">${pa.map(card).join("")}</div></details>`:""):'<div class="mt" style="text-align:center;padding:12px">Nessuna scaletta trovata</div>'}
+  return L.length?up.concat(pa.reverse()).map(card).join(""):'<div class="mt" style="text-align:center;padding:12px">Nessuna scaletta trovata</div>'}
 const nz=s=>String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
 let fav=[];try{fav=JSON.parse(ls.get("coro.fav")||"[]")}catch(e){}
 let NT={},TS=[];try{NT=JSON.parse(ls.get("coro.n")||"{}")}catch(e){}try{TS=JSON.parse(ls.get("coro.tip")||"[]")}catch(e){}
@@ -155,7 +155,7 @@ const tbtn=c=>c.tl?`<button class="bt" data-a="tl" data-id="${c.id}">📖 Leggi<
 const meta=c=>[c.dur?"⏱ "+esc(c.dur)+" min":"",c.dif?"🎚️ "+esc(c.dif):""].filter(Boolean).map(x=>" · "+x).join("");
 const tot=s=>{const m=(s.canti||[]).reduce((a,i)=>{const c=D.canti.find(x=>x.id==i);return a+(c&&+c.dur||0)},0);return m?" · ⏱ ~"+m+" min":""};
 let unl={};const openSc=new Set();
-const filtOn=()=>({rep:!!(F.q||F.t||F.m||F.f),sal:!!(F.yq||F.yt||F.yf),sc:!!(F.sq||F.st||F.sa)})[tab];
+const filtOn=()=>({rep:!!(F.q||F.t||F.m||F.f),sal:!!(F.yq||F.yt||F.yf),sc:!!(F.sq||F.st)})[tab];
 function resetOpen(){[...openSc].forEach(k=>{if(tab=="rep"&&k.startsWith("t-")||tab=="sal"&&k.startsWith("y-")||tab=="sc"&&(k=="past"||D.scalette.some(x=>x.id==k)))openSc.delete(k)})}
 function secHtml(c){const x=unl[c.id]?Object.assign({},c,unl[c.id]):c;
  if(c.prot&&!adm&&!unl[c.id])return `<div class="mt" style="margin-bottom:6px">🔒 Sezione protetta da PIN</div><div class="rw" style="margin:0"><input type="password" inputmode="numeric" id="pn${c.id}" placeholder="PIN" style="flex:1"><button class="b" data-a="unl" data-id="${c.id}">🔓 Sblocca</button></div><div class="mt" id="pm${c.id}"></div>`;
@@ -165,10 +165,11 @@ function presForm(id){const p=D.prove.find(x=>x.id==id);ed={pr:id};$("dgt").text
  $("dgf").innerHTML=VOCI.map(v=>{const L=D.coristi.filter(c=>c.voce==v);return L.length?`<div class="mt"><b>${v}</b></div>`+L.map(c=>`<label style="margin:2px 0;color:var(--tx)"><input type="checkbox" name="${c.id}" style="width:auto"${(p.pres||[]).includes(c.id)?" checked":""}> ${esc(c.n)}</label>`).join(""):""}).join("")||'<p class="mt">Nessun corista</p>';$("dg").showModal()}
 function okPres(){const p=D.prove.find(x=>x.id==ed.pr);mutate(()=>p.pres=[...$("dgf").elements].filter(x=>x.type=="checkbox"&&x.checked).map(x=>x.name));$("dg").close()}
 const td=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+F.sa=annoLit({data:td()});
 function songs(s){return(s.canti||[]).map(i=>D.canti.find(x=>x.id==i)).filter(Boolean).sort((a,b)=>MOM.indexOf(a.mom)-MOM.indexOf(b.mom)).map(c=>`<div class="er"><span><small class="mt">${esc(c.mom)}</small><br><b class="cz">${esc(c.t)}</b>${NT[c.id]?`<div class="sn">📝 ${esc(NT[c.id])}</div>`:""}</span>${lk("🔊",c.audio)}${lk("🎼",c.spartito)}${lk("📄",c.testo)}${tbtn(c)}</div>`).join("")}
 function nextBox(){const t=td(),s=D.scalette.filter(x=>x.data>=t).sort((a,b)=>a.data.localeCompare(b.data))[0];if(!s)return"";
  const hd=`<b class="cz">⭐ Prossima scaletta</b><div class="cz" style="margin-top:3px">${esc(s.t)}</div><div style="margin:3px 0">${chip(s.tempo)}<span class="mt">${dd(s.data)} · ${esc(s.tipo)}</span></div>`;
- return tab=="rep"?`<div class="c nx">${hd}<button class="b s" data-a="tab" data-t="sc">Vedi scaletta</button></div>`
+ return tab=="rep"?`<div class="c nx">${hd}<button class="b s" data-a="gosc" data-id="${s.id}">Vedi scaletta</button></div>`
  :`<details class="c nx" data-sc="n${s.id}" ${openSc.has("n"+s.id)?"open":""}><summary class="ss"><span class="ar">▾</span>${hd}</summary>${songs(s)}<div class="rw"><button class="bt wa" data-a="shs" data-id="${s.id}">${WAI} Condividi</button></div></details>`}
 const ab=(k,id)=>adm?`<button class="b s sm" data-a="edit" data-k="${k}" data-id="${id}" title="Modifica">✏️</button><button class="b d sm" data-a="del" data-k="${k}" data-id="${id}" title="Elimina">🗑️</button>`:"";
 const addBtn=(k,l)=>adm?`<div class="rw" style="margin:0 0 8px"><button class="b" data-a="new" data-k="${k}">${l}</button></div>`:"";
@@ -204,6 +205,7 @@ function okForm(){const o={},el=$("dgf").elements;
  mutate(()=>{if(ed.id)Object.assign(D[ed.k].find(x=>x.id==ed.id),o);else D[ed.k].push({id:Date.now().toString(36),...o})});$("dg").close()}
 async function act(a,d){
  if(a=="tab"){tab=d.t;render()}
+ else if(a=="gosc"){const s=D.scalette.find(x=>x.id==d.id);tab="sc";F.sq="";F.st="";F.sa=s?annoLit(s):"";openSc.add(d.id);render();setTimeout(()=>{const e=[...document.querySelectorAll("details[data-sc]")].find(x=>x.dataset.sc==d.id);if(e)e.scrollIntoView({block:"start"})},50)}
  else if(a=="svc")svOpen(d.id)
  else if(a=="tl"){const c=D.canti.find(x=>x.id==d.id)||D.salmi.find(x=>x.id==d.id);if(c){$("tx").innerHTML=`<h3 class="cz" style="margin:0 0 8px">${esc(c.t)}</h3><div class="sv" style="max-height:62vh;white-space:pre-wrap;font-size:17px;line-height:1.6">${fmt(c.tl)}</div><div class="rw"><button class="b" data-a="txx">Chiudi</button></div>`;$("tx").showModal()}}
  else if(a=="txx")$("tx").close()
